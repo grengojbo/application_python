@@ -1,4 +1,5 @@
 DEBUG = <%= @debug ? "True" : "False" %>
+TEMPLATE_DEBUG = <%= @debug ? "True" : "False" %>
 
 DATABASES = {
     'default': {
@@ -18,3 +19,7 @@ DATABASE_PASSWORD = DATABASES['default']['PASSWORD']
 DATABASE_HOST = DATABASES['default']['HOST']
 DATABASE_PORT = DATABASES['default']['PORT']
 <% end -%>
+
+TIME_ZONE = 'Europe/Kiev'
+LANGUAGE_CODE = 'ru-ru'
+SECRET_KEY = '@4(fdbhasp_hs0(3rfy4zgwz#tczgl0-x=^d#zp3hqve2$md65'
