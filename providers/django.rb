@@ -51,6 +51,7 @@ action :before_compile do
   new_resource.symlink_before_migrate.update({
     new_resource.local_settings_base => ::File.join(new_resource.base_django_app_path, new_resource.local_settings_file),
   })
+  #  new_resource.local_settings_base => new_resource.local_settings_file,
 
   if new_resource.wsgi
     new_resource.symlink_before_migrate.update({
@@ -197,11 +198,12 @@ def install_requirements
     # that is a package-centric resource not a generic wrapper on pip so we can't
     # use it to just `pip install -r requirements.txt`
     # So, we copy and paste some relevant bits of code instead...
-    path_req = ::File.join(new_resource.release_path, new_resource.requirements)
-    Chef::Log.info("Requirements path #{path_req}")
-    if ::File.exists?(path_req)
-      new_resource.requirements = path_req
-    end
+
+    
+    #Chef::Log.info("Requirements path #{::File.join(new_resource.release_path, new_resource.requirements)}")
+    #if ::File.exists?(path_req)
+    #  new_resource.requirements = path_req
+    #end
     timeout = 1200
     Chef::Log.info("Running: pip install -r #{new_resource.requirements}")
     cmd = shell_out!("#{pip_cmd(new_resource)} install -r #{new_resource.requirements}", :timeout => timeout)
