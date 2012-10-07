@@ -62,6 +62,7 @@ end
 
 action :before_deploy do
   install_packages
+  create_structure
   create_settings_file
   if new_resource.wsgi
     create_wsgi_file
@@ -213,6 +214,45 @@ def install_requirements
   else
     Chef::Log.info("No requirements file found")
   end
+end
+
+def create_structure
+  directory "#{new_resource.path}/shared/media/uploads" do
+    owner new_resource.owner
+    group new_resource.group
+    mode '0755'
+    recursive true
+  end
+  directory "#{new_resource.path}/shared/config" do
+      owner new_resource.owner
+      group new_resource.group
+      mode '0755'
+      recursive true
+  end
+  directory "#{new_resource.path}/shared/log" do
+      owner new_resource.owner
+      group new_resource.group
+      mode '0755'
+      recursive true
+  end
+  directory "#{new_resource.path}/shared/db" do
+      owner new_resource.owner
+      group new_resource.group
+      mode '0755'
+      recursive true
+  end
+  directory "#{new_resource.path}/shared/pids" do
+        owner new_resource.owner
+        group new_resource.group
+        mode '0755'
+        recursive true
+    end
+  directory "#{new_resource.path}/shared/system" do
+        owner new_resource.owner
+        group new_resource.group
+        mode '0755'
+        recursive true
+    end
 end
 
 def create_settings_file
