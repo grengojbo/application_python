@@ -197,6 +197,11 @@ def install_requirements
     # that is a package-centric resource not a generic wrapper on pip so we can't
     # use it to just `pip install -r requirements.txt`
     # So, we copy and paste some relevant bits of code instead...
+    path_req = ::File.join(new_resource.release_path, new_resource.requirements)
+    Chef::Log.info("Requirements path #{path_req}")
+    if ::File.exists?(path_req)
+      new_resource.requirements = path_req
+    end
     timeout = 1200
     Chef::Log.info("Running: pip install -r #{new_resource.requirements}")
     cmd = shell_out!("#{pip_cmd(new_resource)} install -r #{new_resource.requirements}", :timeout => timeout)
