@@ -83,6 +83,14 @@ action :before_symlink do
   end
 
   if new_resource.collectstatic
+    if new_resource.django_static_path
+      directory "#{::File.join(new_resource.release_path, new_resource.django_static_path)}" do
+        owner new_resource.owner
+        group new_resource.group
+        mode '0755'
+        recursive true
+      end
+    end
     cmd = new_resource.collectstatic.is_a?(String) ? new_resource.collectstatic : "collectstatic --noinput"
     execute "#{::File.join(new_resource.virtualenv, "bin", "python")} manage.py #{cmd}" do
       user new_resource.owner
@@ -223,36 +231,29 @@ def create_structure
     mode '0755'
     recursive true
   end
-  directory "#{new_resource.path}/shared/config" do
+  %w{config log db pids system}.each do |d|
+    directory "#{new_resource.path}/shared/#{d}" do
       owner new_resource.owner
       group new_resource.group
       mode '0755'
       recursive true
-  end
-  directory "#{new_resource.path}/shared/log" do
-      owner new_resource.owner
-      group new_resource.group
-      mode '0755'
-      recursive true
-  end
-  directory "#{new_resource.path}/shared/db" do
-      owner new_resource.owner
-      group new_resource.group
-      mode '0755'
-      recursive true
-  end
-  directory "#{new_resource.path}/shared/pids" do
-        owner new_resource.owner
-        group new_resource.group
-        mode '0755'
-        recursive true
     end
-  directory "#{new_resource.path}/shared/system" do
-        owner new_resource.owner
-        group new_resource.group
-        mode '0755'
-        recursive true
-    end
+  end
+end
+
+def compile_bootsrap
+  #run("cp #{new_resource.release_path}/lib/bootstrap/img/* {1}/base/static/img/")
+  # run("cp {0}/extras/fontawesome/font/* {1}/base/static/font/")
+  # run("recess --compile {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.css")
+  # run("recess --compress {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.min.css")
+  # run("recess --compile {0}/base/static/less/responsive.less > {0}/base/static/css/bootstrap-responsive.css")
+  # run("recess --compress {0}/base/static/less/responsive.less > {0}/base/static/css/bootstrap-responsive.min.css")
+  # run("cd {1}/lib/bootstrap/ && cat js/bootstrap-transition.js js/bootstrap-alert.js js/bootstrap-button.js js/bootstrap-carousel.js js/bootstrap-collapse.js js/bootstrap-dropdown.js js/bootstrap-modal.js js/bootstrap-tooltip.js js/bootstrap-popover.js js/bootstrap-scrollspy.js js/bootstrap-tab.js js/bootstrap-typeahead.js js/bootstrap-affix.js > {0}/base/static/js/libs/bootstrap.js")
+  # run("uglifyjs -nc {0}/base/static/js/libs/bootstrap.js > {0}/base/static/js/libs/bootstrap.min.js")
+  # run("recess --compress {0}/base/static/less/aplication.less > {0}/base/static/css/aplication.min.css")
+  # run("recess --compile {0}/base/static/less/aplication.less > {0}/base/static/css/aplication.css")
+  # run("cp -u {0}/extras/tinymce_setup.js {1}js/")
+  # run("cp -ur {0}/extras/tinymce_language_pack/* {1}grappelli/tinymce/jscripts/tiny_mce/")
 end
 
 def pil_link
