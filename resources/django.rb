@@ -34,6 +34,7 @@ attribute :settings_module, :kind_of => String, :default => "settings"
 attribute :manage_py_migration_commands, :kind_of => Array, :default => ['syncdb --noinput']
 attribute :virtualenv_options, :kind_of => String, :default => "--distribute"
 attribute :django_superusers, :kind_of => Array, :default => []
+attribute :base_django_app_path, :kind_of => [String], :default => ''
 
 def local_settings_base
   local_settings_file.split(/[\\\/]/).last

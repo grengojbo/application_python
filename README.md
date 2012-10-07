@@ -48,6 +48,7 @@ A new virtualenv will be created for the application in "#{path}/shared/env"; pi
 - legacy\_database\_settings: if true, the default settings template will generate legacy database config variables. Defaults to false
 - debug: used by the default settings template to control debugging. Defaults to false
 - collectstatic: controls the behavior of the `staticfiles` app. If true, if will invoke manage.py with `collectstatic --noinput`; you can also pass a String with an explicit command (see Usage below). Defaults to false
+- base\_django\_app\_path: added ability to deploy a django app which is not in the root folder
 
 # Database block parameters
 

@@ -49,7 +49,7 @@ action :before_compile do
   new_resource.migration_command migration_cmds.join " && "
 
   new_resource.symlink_before_migrate.update({
-    new_resource.local_settings_base => new_resource.local_settings_file,
+    new_resource.local_settings_base => ::File.join(new_resource.base_django_app_path, new_resource.local_settings_file),
   })
 
   if new_resource.wsgi
@@ -249,4 +249,8 @@ def pip_cmd(nr)
   else
     'pip'
   end
+end
+
+def django_app_folder(nr)
+  "#{::File.join( nr.release_path, nr.base_django_app_path )}"
 end
