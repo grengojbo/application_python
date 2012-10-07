@@ -44,6 +44,8 @@ end
 action :before_compile do
   include_recipe 'python'
 
+  create_structure
+  
   migration_cmds = (new_resource.migration_command) ? [new_resource.migration_command] : []
   migration_cmds.push(make_manage_py_commands(new_resource.manage_py_migration_commands))
   new_resource.migration_command migration_cmds.join " && "
@@ -70,6 +72,7 @@ action :before_deploy do
 end
 
 action :before_migrate do
+  create_structure
   install_requirements
 end
 
@@ -82,6 +85,7 @@ action :before_symlink do
     ::Chef::Log.warn("No django superusers created for django application: #{new_resource.name}")
   end
 
+  compile_bootsrap
   if new_resource.collectstatic
     if new_resource.django_static_path
       directory "#{::File.join(new_resource.release_path, new_resource.django_static_path)}" do
@@ -242,8 +246,15 @@ def create_structure
 end
 
 def compile_bootsrap
-  #run("cp #{new_resource.release_path}/lib/bootstrap/img/* {1}/base/static/img/")
-  # run("cp {0}/extras/fontawesome/font/* {1}/base/static/font/")
+  timeout = 1200
+  Chef::Log.info("----------------------------------------------------------")
+  Chef::Log.info("cp #{::File.join(new_resource.release_path,"lib/bootstrap/img/* ")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/img/")}")
+  execute "bootstrap_css" do
+    user new_resource.owner
+    command "cp #{::File.join(new_resource.release_path,"lib/bootstrap/img/*")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/img/")}"
+    command "cp #{::File.join(new_resource.release_path,"/extras/fontawesome/font/*")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/font/")}"
+  end
+  #shell_out!("#{::File.join(new_resource.release_path,"")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"")}", :timeout => timeout)
   # run("recess --compile {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.css")
   # run("recess --compress {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.min.css")
   # run("recess --compile {0}/base/static/less/responsive.less > {0}/base/static/css/bootstrap-responsive.css")
