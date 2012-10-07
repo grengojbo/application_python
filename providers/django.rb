@@ -51,7 +51,6 @@ action :before_compile do
   new_resource.symlink_before_migrate.update({
     new_resource.local_settings_base => ::File.join(new_resource.base_django_app_path, new_resource.local_settings_file),
   })
-  #  new_resource.local_settings_base => new_resource.local_settings_file,
 
   if new_resource.wsgi
     new_resource.symlink_before_migrate.update({
@@ -63,6 +62,7 @@ end
 action :before_deploy do
   install_packages
   create_structure
+  pil_link
   create_settings_file
   if new_resource.wsgi
     create_wsgi_file
@@ -253,6 +253,21 @@ def create_structure
         mode '0755'
         recursive true
     end
+end
+
+def pil_link
+  link "#{new_resource.path}/shared/env/lib/libjpeg.so" do
+    to "/usr/lib/x86_64-linux-gnu/libjpeg.so"
+    only_if { ::FileTest.exists?("/usr/lib/x86_64-linux-gnu/libjpeg.so") }
+  end
+  link "#{new_resource.path}/shared/env/lib/libfreetype.so" do
+    to "/usr/lib/x86_64-linux-gnu/libfreetype.so"
+    only_if { ::FileTest.exists?("/usr/lib/x86_64-linux-gnu/libfreetype.so") }
+  end
+  link "#{new_resource.path}/shared/env/lib/libz.so" do
+    to "/usr/lib/x86_64-linux-gnu/libz.so"
+    only_if { ::FileTest.exists?("/usr/lib/x86_64-linux-gnu/libz.so") }
+  end
 end
 
 def create_settings_file
