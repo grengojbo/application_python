@@ -246,25 +246,56 @@ def create_structure
 end
 
 def compile_bootsrap
-  timeout = 1200
   Chef::Log.info("----------------------------------------------------------")
-  Chef::Log.info("cp #{::File.join(new_resource.release_path,"lib/bootstrap/img/* ")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/img/")}")
-  execute "bootstrap_css" do
+  execute "bootstrap_css_1" do
     user new_resource.owner
-    command "cp #{::File.join(new_resource.release_path,"lib/bootstrap/img/*")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/img/")}"
-    command "cp #{::File.join(new_resource.release_path,"/extras/fontawesome/font/*")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"base/static/font/")}"
+    command "cp #{::File.join(new_resource.release_path, "/extras/fontawesome/font/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/font/")}"
   end
-  #shell_out!("#{::File.join(new_resource.release_path,"")} #{::File.join(new_resource.release_path,new_resource.base_django_app_path,"")}", :timeout => timeout)
-  # run("recess --compile {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.css")
-  # run("recess --compress {0}/base/static/less/bootstrap.less > {0}/base/static/css/bootstrap.min.css")
-  # run("recess --compile {0}/base/static/less/responsive.less > {0}/base/static/css/bootstrap-responsive.css")
-  # run("recess --compress {0}/base/static/less/responsive.less > {0}/base/static/css/bootstrap-responsive.min.css")
-  # run("cd {1}/lib/bootstrap/ && cat js/bootstrap-transition.js js/bootstrap-alert.js js/bootstrap-button.js js/bootstrap-carousel.js js/bootstrap-collapse.js js/bootstrap-dropdown.js js/bootstrap-modal.js js/bootstrap-tooltip.js js/bootstrap-popover.js js/bootstrap-scrollspy.js js/bootstrap-tab.js js/bootstrap-typeahead.js js/bootstrap-affix.js > {0}/base/static/js/libs/bootstrap.js")
-  # run("uglifyjs -nc {0}/base/static/js/libs/bootstrap.js > {0}/base/static/js/libs/bootstrap.min.js")
-  # run("recess --compress {0}/base/static/less/aplication.less > {0}/base/static/css/aplication.min.css")
-  # run("recess --compile {0}/base/static/less/aplication.less > {0}/base/static/css/aplication.css")
-  # run("cp -u {0}/extras/tinymce_setup.js {1}js/")
-  # run("cp -ur {0}/extras/tinymce_language_pack/* {1}grappelli/tinymce/jscripts/tiny_mce/")
+  execute "bootstrap_css_2" do
+    user new_resource.owner
+    command "cp #{::File.join(new_resource.release_path, "lib/bootstrap/img/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/img/")}"
+  end
+  execute "bootstrap_css_3" do
+    user new_resource.owner
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.css")}"
+  end
+  execute "bootstrap_css_4" do
+    user new_resource.owner
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.min.css")}"
+  end
+  execute "bootstrap_css_5" do
+    user new_resource.owner
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.css")}"
+  end
+  execute "bootstrap_css_6" do
+    user new_resource.owner
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.min.css")}"
+  end
+  execute "bootstrap_css_7" do
+    user new_resource.owner
+    cwd ::File.join(new_resource.release_path, "lib/bootstrap/")
+    command "cat js/bootstrap-transition.js js/bootstrap-alert.js js/bootstrap-button.js js/bootstrap-carousel.js js/bootstrap-collapse.js js/bootstrap-dropdown.js js/bootstrap-modal.js js/bootstrap-tooltip.js js/bootstrap-popover.js js/bootstrap-scrollspy.js js/bootstrap-tab.js js/bootstrap-typeahead.js js/bootstrap-affix.js > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/js/libs/bootstrap.js")}"
+  end
+  execute "bootstrap_css_8" do
+    user new_resource.owner
+    command "uglifyjs -nc #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/js/libs/bootstrap.js")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/js/libs/bootstrap.min.js")}"
+  end
+  execute "bootstrap_css_9" do
+    user new_resource.owner
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.min.css")}"
+  end
+  execute "bootstrap_css_10" do
+    user new_resource.owner
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.css")}"
+  end
+  execute "bootstrap_css_11" do
+    user new_resource.owner
+    command "cp -u #{::File.join(new_resource.release_path, "extras/tinymce_setup.js")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "js/")}"
+  end
+  execute "bootstrap_css_12" do
+    user new_resource.owner
+    command "cp -ur #{::File.join(new_resource.release_path, "extras/tinymce_language_pack/*")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "grappelli/tinymce/jscripts/tiny_mce/")}"
+  end
 end
 
 def pil_link
