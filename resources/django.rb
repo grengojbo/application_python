@@ -33,7 +33,8 @@ attribute :collectstatic, :kind_of => [TrueClass, FalseClass, String], :default 
 attribute :settings_module, :kind_of => String, :default => "settings"
 attribute :manage_py_migration_commands, :kind_of => Array, :default => ['syncdb --noinput']
 attribute :virtualenv_options, :kind_of => String, :default => "--distribute"
-attribute :django_superusers, :kind_of => Array, :default => []
+attribute :django_superusers, :kind_of => [Hash,NilClass], :default => nil
+#attribute :django_superusers, :kind_of => Array, :default => []
 attribute :base_django_app_path, :kind_of => [String], :default => ''
 attribute :django_static_path, :kind_of => [String], :default => 'public/static'
 attribute :bootsrap_css, :kind_of => [String], :default => 'lib/bootstrap'

@@ -102,6 +102,14 @@ action :before_symlink do
       cwd new_resource.release_path
     end
   end
+  execute "bootstrap_css_11" do
+    user new_resource.owner
+    command "cp -u #{::File.join(new_resource.release_path, "extras/tinymce_setup.js")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "js/")}"
+  end
+  execute "bootstrap_css_12" do
+    user new_resource.owner
+    command "cp -ur #{::File.join(new_resource.release_path, "extras/tinymce_language_pack/*")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "grappelli/tinymce/jscripts/tiny_mce/")}"
+  end
 
   ruby_block "remove_run_migrations" do
     block do
@@ -218,6 +226,7 @@ def install_requirements
     #  new_resource.requirements = path_req
     #end
     timeout = 1200
+    #Chef::Log.info("Running: pip install -r #{::File.join(new_resource.release_path, new_resource.requirements)}")
     Chef::Log.info("Running: pip install -r #{new_resource.requirements}")
     cmd = shell_out!("#{pip_cmd(new_resource)} install -r #{new_resource.requirements}", :timeout => timeout)
     if cmd
@@ -249,27 +258,27 @@ def compile_bootsrap
   Chef::Log.info("----------------------------------------------------------")
   execute "bootstrap_css_1" do
     user new_resource.owner
-    command "cp #{::File.join(new_resource.release_path, "/extras/fontawesome/font/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/font/")}"
+    command "cp -u #{::File.join(new_resource.release_path, "/extras/fontawesome/font/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/font/")}"
   end
   execute "bootstrap_css_2" do
     user new_resource.owner
-    command "cp #{::File.join(new_resource.release_path, "lib/bootstrap/img/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/img/")}"
+    command "cp -u #{::File.join(new_resource.release_path, "lib/bootstrap/img/*")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/img/")}"
   end
   execute "bootstrap_css_3" do
     user new_resource.owner
-    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.css")}"
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.css")}"
   end
   execute "bootstrap_css_4" do
     user new_resource.owner
-    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.min.css")}"
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/bootstrap.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap.min.css")}"
   end
   execute "bootstrap_css_5" do
     user new_resource.owner
-    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.css")}"
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.css")}"
   end
   execute "bootstrap_css_6" do
     user new_resource.owner
-    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.min.css")}"
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/responsive.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/bootstrap-responsive.min.css")}"
   end
   execute "bootstrap_css_7" do
     user new_resource.owner
@@ -282,19 +291,11 @@ def compile_bootsrap
   end
   execute "bootstrap_css_9" do
     user new_resource.owner
-    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.min.css")}"
+    command "recess --compress #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.min.css")}"
   end
   execute "bootstrap_css_10" do
     user new_resource.owner
-    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.css")}"
-  end
-  execute "bootstrap_css_11" do
-    user new_resource.owner
-    command "cp -u #{::File.join(new_resource.release_path, "extras/tinymce_setup.js")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "js/")}"
-  end
-  execute "bootstrap_css_12" do
-    user new_resource.owner
-    command "cp -ur #{::File.join(new_resource.release_path, "extras/tinymce_language_pack/*")} #{::File.join(new_resource.release_path, new_resource.django_static_path, "grappelli/tinymce/jscripts/tiny_mce/")}"
+    command "recess --compile #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/less/aplication.less")} > #{::File.join(new_resource.release_path, new_resource.base_django_app_path, "base/static/css/aplication.css")}"
   end
 end
 
